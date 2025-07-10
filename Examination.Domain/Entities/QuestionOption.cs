@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Examination.Domain.Entities
-{
+{	
 	public class QuestionOption : BaseEntity
 	{
-		public int QuestionID { get; set; }
+		public int QuestionId { get; set; }
 		public string Text { get; set; }
 		public bool IsCorrect { get; set; }
 		public Question Question { get; set; }

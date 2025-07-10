@@ -11,8 +11,8 @@ namespace Examination.Domain.Entities
 	{
 		public DateTime StartedAt { get; set; }
 		public int Duration { get; set; }
-		public int StudentID { get; set; }
-		public int SubjectID { get; set; }
+		public string StudentId{ get; set; }
+		public int SubjectId { get; set; }
 		public AppUser Student { get; set; }
 		public Subject Subject { get; set; }
 		public ICollection<ExamQuestion> ExamQuestions { get; set; }	

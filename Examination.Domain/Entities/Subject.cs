@@ -9,7 +9,7 @@ namespace Examination.Domain.Entities
 	public class Subject : BaseEntity
 	{
 		public string Name { get; set; }
-		public ICollection<Question> Questions { get; set; } = new HashSet<Question>();
+		public ICollection<Question> Questions { get; set; } = new HashSet<Question>();  
 		public ICollection<Exam> Exams { get; set; } = new HashSet<Exam>();
 	}
 }
