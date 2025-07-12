@@ -114,6 +114,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			#endregion
