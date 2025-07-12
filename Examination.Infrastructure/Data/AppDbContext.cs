@@ -32,6 +32,7 @@ namespace Examination.Infrastructure.Data
 		public DbSet<ExamQuestion> ExamQuestions { get; set; }
 		public DbSet<ExamSubmission> Submissions { get; set; }
 		public DbSet<SubmissionAnswer> SubmissionAnswers { get; set; }
+
 		private void SeedData(ModelBuilder modelBuilder)
 		{
 			var subjects = new List<Subject>
@@ -50,12 +51,12 @@ namespace Examination.Infrastructure.Data
 
 			var mathQuestions = new List<(string Text, string[] Options, int CorrectOption, DifficultyLevel Difficulty)>
 		{
-            ("What is the derivative of x^2?", new[] { "2x", "x", "x^2", "2x^2" }, 0, DifficultyLevel.Easy),
+			("What is the derivative of x^2?", new[] { "2x", "x", "x^2", "2x^2" }, 0, DifficultyLevel.Easy),
 			("What is the integral of 3x^2?", new[] { "x^3 + C", "3x^3 + C", "x^2 + C", "3x + C" }, 0, DifficultyLevel.Medium),
 			("What is the Pythagorean theorem?", new[] { "a^2 + b^2 = c^2", "a^2 - b^2 = c^2", "a + b = c", "a^2 = b^2 + c^2" }, 0, DifficultyLevel.Easy),
 			("What is the derivative of sin(x)?", new[] { "cos(x)", "-sin(x)", "sin(x)", "-cos(x)" }, 0, DifficultyLevel.Medium),
 			("Solve: x^2 - 4 = 0", new[] { "x = ±2", "x = ±4", "x = 2", "x = 0" }, 0, DifficultyLevel.Medium),
-            ("Solve for x: 2x + 3 = 7", new[] { "x = 3", "x = 2", "x = 4", "x = 1" }, 1, DifficultyLevel.Easy),
+			("Solve for x: 2x + 3 = 7", new[] { "x = 3", "x = 2", "x = 4", "x = 1" }, 1, DifficultyLevel.Easy),
 			("What is 2^3?", new[] { "6", "8", "4", "9" }, 1, DifficultyLevel.Easy),
 			("What is the slope of y = 2x + 3?", new[] { "3", "2", "1", "0" }, 1, DifficultyLevel.Easy),
 			("What is the area of a circle with radius 3?", new[] { "6π", "9π", "3π", "12π" }, 1, DifficultyLevel.Medium),

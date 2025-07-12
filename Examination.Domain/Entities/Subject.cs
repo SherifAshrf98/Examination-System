@@ -11,5 +11,6 @@ namespace Examination.Domain.Entities
 		public string Name { get; set; }
 		public ICollection<Question> Questions { get; set; } = new HashSet<Question>();  
 		public ICollection<Exam> Exams { get; set; } = new HashSet<Exam>();
+		public ICollection<StudentSubject> StudentSubjects { get; set; } = new HashSet<StudentSubject>();
 	}
 }

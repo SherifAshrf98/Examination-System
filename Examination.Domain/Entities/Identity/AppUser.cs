@@ -9,5 +9,6 @@ namespace Examination.Domain.Entities.Identity
 		public string? LastName { get; set; }
 		public ICollection<Exam> Exams { get; set; } = new HashSet<Exam>();
 		public ICollection<ExamSubmission> Submissions { get; set; } = new HashSet<ExamSubmission>();
+		public ICollection<StudentSubject> StudentSubjects { get; set; } = new HashSet<StudentSubject>();
 	}
 }
