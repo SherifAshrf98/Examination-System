@@ -4,8 +4,10 @@ using Examination.Application.Interfaces;
 using Examination.Application.Services;
 using Examination.Application.Validators;
 using Examination.Domain.Entities.Identity;
+using Examination.Domain.Interfaces;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Data.Seeding;
+using Examination.Infrastructure.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,7 +46,7 @@ namespace Examination.Api
 			#region AddDbContextServices
 
 			builder.Services.AddDbContext<AppDbContext>(options =>
-								options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); 
+								options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 			#endregion
 
 			#region AddIdentityServices
@@ -110,7 +112,9 @@ namespace Examination.Api
 			#region AddApplicationServices
 
 			builder.Services.AddScoped<ITokenService, TokenService>();
-			builder.Services.AddScoped<IAuthService, AuthService>(); 
+			builder.Services.AddScoped<IAuthService, AuthService>();
+			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 			#endregion
 
