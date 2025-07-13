@@ -1,5 +1,5 @@
 ﻿using Examination.Domain.Entities;
-using Examination.Domain.Interfaces;
+using Examination.Application.Interfaces.Repositories;
 using Examination.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -13,37 +13,43 @@ namespace Examination.Infrastructure.Repositories
 	{
 		private readonly AppDbContext _dbContext;
 		private readonly IExamRepository _exams;
+		private readonly ISubjectRepository _subjects;
 		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
 		private readonly IGenericRepository<Question> _questions;
-		private readonly IGenericRepository<Subject> _subjects;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
 		private readonly IGenericRepository<SubmissionAnswer> _submissionAnswers;
+		private readonly IGenericRepository<StudentSubject> _studentSubjects;
 
 		public UnitOfWork(AppDbContext dbContext,
 		IExamRepository exams,
+		ISubjectRepository subjects,
 		IGenericRepository<ExamSubmission> examSubmissions,
 		IGenericRepository<Question> questions,
-		IGenericRepository<Subject> subjects,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
-		IGenericRepository<SubmissionAnswer> submissionAnswers)
+		IGenericRepository<SubmissionAnswer> submissionAnswers,
+		IGenericRepository<StudentSubject> StudentSubjects)
 		{
 			_dbContext = dbContext;
 			_exams = exams;
+			_subjects = subjects;
 			_examSubmissions = examSubmissions;
 			_questions = questions;
 			_examQuestions = examQuestions;
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
+			_studentSubjects = StudentSubjects;
 		}
 		public IExamRepository ExamsRepository => _exams;
+		public ISubjectRepository SubjectsRepository => _subjects;
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
 		public IGenericRepository<Question> QuestionsRepository => _questions;
-		public IGenericRepository<Subject> SubjectsRepository => _subjects;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository => _submissionAnswers;
+		public IGenericRepository<StudentSubject> StudentSubjectsRepository => _studentSubjects;
+
 
 		public async Task<int> CompleteAsync()
 		{

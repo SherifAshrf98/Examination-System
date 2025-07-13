@@ -1,5 +1,5 @@
-﻿using Examination.Domain.Entities;
-using Examination.Domain.Interfaces;
+﻿using Examination.Application.Interfaces.Repositories;
+using Examination.Domain.Entities;
 using Examination.Infrastructure.Data;
 using System;
 using System.Collections.Generic;

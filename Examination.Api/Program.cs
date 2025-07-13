@@ -1,10 +1,10 @@
 using Examination.Application.Common;
 using Examination.Application.Dtos;
 using Examination.Application.Interfaces;
+using Examination.Application.Interfaces.Repositories;
 using Examination.Application.Services;
 using Examination.Application.Validators;
 using Examination.Domain.Entities.Identity;
-using Examination.Domain.Interfaces;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Data.Seeding;
 using Examination.Infrastructure.Repositories;
@@ -115,7 +115,9 @@ namespace Examination.Api
 			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
+			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			builder.Services.AddScoped<ISubjectService, SubjectService>();
 
 			#endregion
 

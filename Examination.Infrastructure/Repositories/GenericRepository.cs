@@ -1,5 +1,5 @@
-﻿using Examination.Domain.Entities;
-using Examination.Domain.Interfaces;
+﻿using Examination.Application.Interfaces.Repositories;
+using Examination.Domain.Entities;
 using Examination.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -38,7 +38,6 @@ namespace Examination.Infrastructure.Repositories
 		{
 			return await _dbContext.Set<T>().Where(predicate).ToListAsync();
 		}
-
 		public async Task<T> GetByIdAsync(int id)
 		{
 			return await _dbContext.Set<T>().FindAsync(id);

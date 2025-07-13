@@ -17,6 +17,5 @@ namespace Examination.Domain.Entities
 		public Subject Subject { get; set; }
 		public ICollection<ExamQuestion> ExamQuestions { get; set; }	
 		public ExamSubmission Submission { get; set; }
-
 	}
 }	
