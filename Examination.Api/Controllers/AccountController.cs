@@ -26,7 +26,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 			return Ok(new ApiResponse(201, "Registeration Succeeded "));
 		}
@@ -41,7 +41,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 			return Ok(new ApiResponse<string>(200, result.Value));
 		}

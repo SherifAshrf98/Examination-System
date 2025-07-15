@@ -14,5 +14,6 @@ namespace Examination.Application.Interfaces.Repositories
 		Task AddAsync(T entity);
 		void Delete(T entity);
 		Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate);
+		Task<bool> IsExistingAsync(Expression<Func<T, bool>> predicate);
 	}
 }

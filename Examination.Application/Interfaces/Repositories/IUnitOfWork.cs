@@ -12,7 +12,7 @@ namespace Examination.Application.Interfaces.Repositories
 		public IExamRepository ExamsRepository { get; }
 		public ISubjectRepository SubjectsRepository { get; }
 		public IStudentSubjectRepository StudentSubjectsRepository { get; }
-		public IGenericRepository<Question> QuestionsRepository { get; }
+		public IQuestionRepository QuestionsRepository { get; }
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository { get; }
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository { get; }

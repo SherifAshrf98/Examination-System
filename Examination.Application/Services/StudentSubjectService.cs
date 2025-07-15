@@ -52,7 +52,7 @@ namespace Examination.Application.Services
 
 			if (studentSubject == null)
 			{
-				return Result<bool>.Failure("Student subject record not found.");
+				return Result<bool>.NotFound("Student subject record not found.");
 			}
 
 			_unitOfWork.StudentSubjectsRepository.Delete(studentSubject);

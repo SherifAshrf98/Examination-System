@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Examination.Api.Controllers
 {
-	[Authorize(Roles = "Admin")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class SubjectController : ControllerBase
@@ -40,7 +39,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
 			return Ok(new ApiResponse<SubjectDto>(200, result.Value));
@@ -56,7 +55,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
 			return Ok(new ApiResponse(204, "Subject Updated Successfully"));
@@ -72,7 +71,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
 			return Ok(new ApiResponse(201, "Subject Created Succesfully"));
@@ -88,7 +87,7 @@ namespace Examination.Api.Controllers
 				if (result.IsNotFound)
 					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
 			return Ok(new ApiResponse(204, "Subject deleted Successfully"));

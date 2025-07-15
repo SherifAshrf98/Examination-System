@@ -42,5 +42,10 @@ namespace Examination.Infrastructure.Repositories
 		{
 			return await _dbContext.Set<T>().FindAsync(id);
 		}
+
+		public async Task<bool> IsExistingAsync(Expression<Func<T, bool>> predicate)
+		{
+			return await _dbContext.Set<T>().AnyAsync(predicate);
+		}
 	}
 }

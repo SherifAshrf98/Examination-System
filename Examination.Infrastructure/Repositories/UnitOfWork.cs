@@ -15,8 +15,8 @@ namespace Examination.Infrastructure.Repositories
 		private readonly IExamRepository _exams;
 		private readonly ISubjectRepository _subjects;
 		private readonly IStudentSubjectRepository _studentSubjects;
+		private readonly IQuestionRepository _questions;
 		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
-		private readonly IGenericRepository<Question> _questions;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
 		private readonly IGenericRepository<SubmissionAnswer> _submissionAnswers;
@@ -24,9 +24,9 @@ namespace Examination.Infrastructure.Repositories
 		public UnitOfWork(AppDbContext dbContext,
 		IExamRepository exams,
 		ISubjectRepository subjects,
+		IQuestionRepository questions,
 		IStudentSubjectRepository StudentSubjects,
 		IGenericRepository<ExamSubmission> examSubmissions,
-		IGenericRepository<Question> questions,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
 		IGenericRepository<SubmissionAnswer> submissionAnswers)
@@ -40,13 +40,12 @@ namespace Examination.Infrastructure.Repositories
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
 			_studentSubjects = StudentSubjects;
-
 		}
 		public IExamRepository ExamsRepository => _exams;
 		public ISubjectRepository SubjectsRepository => _subjects;
 		public IStudentSubjectRepository StudentSubjectsRepository => _studentSubjects;
+		public IQuestionRepository QuestionsRepository => _questions;
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
-		public IGenericRepository<Question> QuestionsRepository => _questions;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository => _submissionAnswers;

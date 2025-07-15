@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Examination.Api
 {
@@ -28,7 +29,10 @@ namespace Examination.Api
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers().AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+			});
 
 			#region SwaggerServices 
 
@@ -112,15 +116,17 @@ namespace Examination.Api
 
 			#region AddApplicationServices
 
-			builder.Services.AddScoped<ITokenService, TokenService>();
-			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
 			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 			builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
+			builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			builder.Services.AddScoped<ITokenService, TokenService>();
+			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped<ISubjectService, SubjectService>();
 			builder.Services.AddScoped<IStudentSubjectService, StudentSubjectService>();
+			builder.Services.AddScoped<IQuestionService, QuestionService>();
 			builder.Services.AddScoped<IUserService, UserService>();
 
 			#endregion
