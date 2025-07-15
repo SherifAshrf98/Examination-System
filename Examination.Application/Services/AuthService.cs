@@ -1,5 +1,5 @@
 ﻿using Examination.Application.Common;
-using Examination.Application.Dtos;
+using Examination.Application.Dtos.Auth;
 using Examination.Application.Interfaces;
 using Examination.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +39,8 @@ namespace Examination.Application.Services
 			if (!result.Succeeded)
 				return Result<bool>.Failure(result.Errors.Select(e => e.Description).ToList());
 
+			await _userManager.AddToRoleAsync(newUser, "Student");
+
 			return Result<bool>.Success(true);
 		}
 
@@ -50,6 +52,7 @@ namespace Examination.Application.Services
 				return Result<string>.Failure("Invalid Email or Password");
 
 			var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
 			if (!result.Succeeded)
 				return Result<string>.Failure("Invalid Email or Password");
 

@@ -10,13 +10,13 @@ namespace Examination.Application.Interfaces.Repositories
 	public interface IUnitOfWork : IDisposable
 	{
 		public IExamRepository ExamsRepository { get; }
-		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }
-		public IGenericRepository<Question> QuestionsRepository { get; }
 		public ISubjectRepository SubjectsRepository { get; }
-		public IGenericRepository<ExamQuestion> ExamQuestionsRepository { get; }
+		public IStudentSubjectRepository StudentSubjectsRepository { get; }
+		public IGenericRepository<Question> QuestionsRepository { get; }
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository { get; }
+		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository { get; }
-		public IGenericRepository<StudentSubject> StudentSubjectsRepository { get; }
+		public IGenericRepository<ExamQuestion> ExamQuestionsRepository { get; }
 		public Task<int> CompleteAsync();
 	}
 }

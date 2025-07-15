@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Examination.Application.Dtos
+namespace Examination.Application.Common
 {
 	public class Pagination<T>
 	{

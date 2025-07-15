@@ -9,8 +9,9 @@ namespace Examination.Application.Common
 	public class Result<T>
 	{
 		public bool IsSuccess { get; set; }
+		public bool IsNotFound { get; set; }
 		public T Value { get; set; }
-		public List<string> Errors { get; set; }
+		public List<string> Errors { get; set; } = new List<string>();
 
 		public static Result<T> Success(T value)
 		{
@@ -36,6 +37,15 @@ namespace Examination.Application.Common
 			{
 				IsSuccess = false,
 				Value = default,
+				Errors = new List<string> { error }
+			};
+		}
+		public static Result<T> NotFound(string error)
+		{
+			return new Result<T>
+			{
+				IsSuccess = false,
+				IsNotFound = true,
 				Errors = new List<string> { error }
 			};
 		}

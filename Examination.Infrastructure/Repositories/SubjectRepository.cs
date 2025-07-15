@@ -1,16 +1,9 @@
 ﻿using Examination.Application.Common;
-using Examination.Application.Dtos;
 using Examination.Application.Dtos.Subject;
 using Examination.Application.Interfaces.Repositories;
 using Examination.Domain.Entities;
 using Examination.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Examination.Infrastructure.Repositories
 {
 	public class SubjectRepository : GenericRepository<Subject>, ISubjectRepository

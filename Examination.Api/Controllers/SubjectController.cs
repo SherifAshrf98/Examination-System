@@ -1,4 +1,7 @@
-﻿using Examination.Application.Dtos.Subject;
+﻿using Examination.Api.Helpers;
+using Examination.Application.Common;
+using Examination.Application.Dtos.AppUser;
+using Examination.Application.Dtos.Subject;
 using Examination.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,12 +26,8 @@ namespace Examination.Api.Controllers
 		{
 			var result = await _subjectService.GetAllSubjectsAsync(pageNumber, PageSize);
 
-			if (!result.IsSuccess)
-			{
-				return BadRequest(result.Errors);
-			}
 
-			return Ok(result.Value);
+			return Ok(new ApiResponse<Pagination<SubjectDto>>(200, result.Value));
 		}
 
 		[HttpGet("{id}")]
@@ -38,10 +37,13 @@ namespace Examination.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				return BadRequest(result.Errors);
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
-			return Ok(result.Value);
+			return Ok(new ApiResponse<SubjectDto>(200, result.Value));
 		}
 
 		[HttpPut("{id}")]
@@ -51,10 +53,13 @@ namespace Examination.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				return BadRequest(result.Errors);
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
-			return Ok(new { Message = "Subject Updated Successfully" });
+			return Ok(new ApiResponse(204, "Subject Updated Successfully"));
 		}
 
 		[HttpPost]
@@ -64,10 +69,13 @@ namespace Examination.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				return BadRequest(result.Errors);
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
-			return Ok(new { Message = "Subject Added Successfully" });
+			return Ok(new ApiResponse(201, "Subject Created Succesfully"));
 		}
 
 		[HttpDelete("{id}")]
@@ -77,10 +85,13 @@ namespace Examination.Api.Controllers
 
 			if (!result.IsSuccess)
 			{
-				return BadRequest(result.Errors);
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 
-			return Ok(new { Message = "Subject Deleted Successfully" });
+			return Ok(new ApiResponse(204, "Subject deleted Successfully"));
 		}
 	}
 }

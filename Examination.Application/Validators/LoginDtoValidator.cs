@@ -1,4 +1,4 @@
-﻿using Examination.Application.Dtos;
+﻿using Examination.Application.Dtos.Auth;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

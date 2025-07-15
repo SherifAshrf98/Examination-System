@@ -1,5 +1,4 @@
 ﻿using Examination.Application.Common;
-using Examination.Application.Dtos;
 using Examination.Application.Dtos.Subject;
 using Examination.Domain.Entities;
 using System;

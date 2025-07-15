@@ -1,5 +1,4 @@
 ﻿using Examination.Application.Common;
-using Examination.Application.Dtos;
 using Examination.Application.Dtos.Subject;
 using Examination.Application.Interfaces;
 using Examination.Application.Interfaces.Repositories;
@@ -19,11 +18,6 @@ namespace Examination.Application.Services
 		public async Task<Result<Pagination<SubjectDto>>> GetAllSubjectsAsync(int pageNumber, int pageSize)
 		{
 			var paginagtion = await _unitOfWork.SubjectsRepository.GetAllSubjectsAsync(pageNumber, pageSize);
-
-			if (paginagtion == null || paginagtion.Items.Count == 0)
-			{
-				return Result<Pagination<SubjectDto>>.Failure("No subjects found.");
-			}
 
 			return Result<Pagination<SubjectDto>>.Success(paginagtion);
 		}
@@ -68,7 +62,7 @@ namespace Examination.Application.Services
 
 			if (existingSubject == null)
 			{
-				return Result<bool>.Failure("Subject not found.");
+				return Result<bool>.NotFound("Subject not found.");
 			}
 
 			if (updateSubjectDto.Name is not null)
@@ -86,7 +80,7 @@ namespace Examination.Application.Services
 
 			if (existingSubject == null)
 			{
-				return Result<bool>.Failure("Subject not found.");
+				return Result<bool>.NotFound("Subject not found.");
 			}
 
 			_unitOfWork.SubjectsRepository.Delete(existingSubject);

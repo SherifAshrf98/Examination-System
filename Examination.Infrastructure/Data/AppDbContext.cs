@@ -32,6 +32,7 @@ namespace Examination.Infrastructure.Data
 		public DbSet<ExamQuestion> ExamQuestions { get; set; }
 		public DbSet<ExamSubmission> Submissions { get; set; }
 		public DbSet<SubmissionAnswer> SubmissionAnswers { get; set; }
+		public DbSet<StudentSubject> StudentSubjects { get; set; }
 
 		private void SeedData(ModelBuilder modelBuilder)
 		{

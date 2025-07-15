@@ -14,22 +14,22 @@ namespace Examination.Infrastructure.Repositories
 		private readonly AppDbContext _dbContext;
 		private readonly IExamRepository _exams;
 		private readonly ISubjectRepository _subjects;
+		private readonly IStudentSubjectRepository _studentSubjects;
 		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
 		private readonly IGenericRepository<Question> _questions;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
 		private readonly IGenericRepository<SubmissionAnswer> _submissionAnswers;
-		private readonly IGenericRepository<StudentSubject> _studentSubjects;
 
 		public UnitOfWork(AppDbContext dbContext,
 		IExamRepository exams,
 		ISubjectRepository subjects,
+		IStudentSubjectRepository StudentSubjects,
 		IGenericRepository<ExamSubmission> examSubmissions,
 		IGenericRepository<Question> questions,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
-		IGenericRepository<SubmissionAnswer> submissionAnswers,
-		IGenericRepository<StudentSubject> StudentSubjects)
+		IGenericRepository<SubmissionAnswer> submissionAnswers)
 		{
 			_dbContext = dbContext;
 			_exams = exams;
@@ -40,16 +40,16 @@ namespace Examination.Infrastructure.Repositories
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
 			_studentSubjects = StudentSubjects;
+
 		}
 		public IExamRepository ExamsRepository => _exams;
 		public ISubjectRepository SubjectsRepository => _subjects;
+		public IStudentSubjectRepository StudentSubjectsRepository => _studentSubjects;
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
 		public IGenericRepository<Question> QuestionsRepository => _questions;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository => _submissionAnswers;
-		public IGenericRepository<StudentSubject> StudentSubjectsRepository => _studentSubjects;
-
 
 		public async Task<int> CompleteAsync()
 		{

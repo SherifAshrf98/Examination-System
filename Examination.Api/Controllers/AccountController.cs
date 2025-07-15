@@ -1,4 +1,5 @@
-﻿using Examination.Application.Dtos;
+﻿using Examination.Api.Helpers;
+using Examination.Application.Dtos.Auth;
 using Examination.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,14 @@ namespace Examination.Api.Controllers
 		public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
 		{
 			var result = await _authService.RegisterAsync(registerDto);
+			if (!result.IsSuccess)
+			{
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-			if (result.IsSuccess)
-				return Ok(new { Message = "Registeration Succeeded !" });
-
-			return BadRequest(new { errors = result.Errors });
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+			}
+			return Ok(new ApiResponse(201, "Registeration Succeeded "));
 		}
 
 		[HttpPost("login")]
@@ -32,10 +36,14 @@ namespace Examination.Api.Controllers
 		{
 			var result = await _authService.LoginAsync(loginDto);
 
-			if (result.IsSuccess)
-				return Ok(new { Token = result.Value });
+			if (!result.IsSuccess)
+			{
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
 
-			return BadRequest(result.Errors);
+				return NotFound(new ApiValidationErrorResponse() { Errors = result.Errors });
+			}
+			return Ok(new ApiResponse<string>(200, result.Value));
 		}
 	}
 }

@@ -1,5 +1,5 @@
+using Examination.Api.Helpers;
 using Examination.Application.Common;
-using Examination.Application.Dtos;
 using Examination.Application.Interfaces;
 using Examination.Application.Interfaces.Repositories;
 using Examination.Application.Services;
@@ -8,6 +8,7 @@ using Examination.Domain.Entities.Identity;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Data.Seeding;
 using Examination.Infrastructure.Repositories;
+using Examination.Infrastructure.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -98,13 +99,13 @@ namespace Examination.Api
 						.Select(x => x.ErrorMessage)
 						.ToList();
 
-					var result = new
+
+					var errorResponse = new ApiValidationErrorResponse
 					{
-						isSuccess = false,
-						errors
+						Errors = errors
 					};
 
-					return new BadRequestObjectResult(result);
+					return new BadRequestObjectResult(errorResponse);
 				};
 			});
 			#endregion
@@ -116,8 +117,11 @@ namespace Examination.Api
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
 			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+			builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped<ISubjectService, SubjectService>();
+			builder.Services.AddScoped<IStudentSubjectService, StudentSubjectService>();
+			builder.Services.AddScoped<IUserService, UserService>();
 
 			#endregion
 
