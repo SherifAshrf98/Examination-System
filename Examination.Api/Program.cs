@@ -121,6 +121,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 			builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
 			builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+			builder.Services.AddScoped<IUserRepository, UserRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IAuthService, AuthService>();

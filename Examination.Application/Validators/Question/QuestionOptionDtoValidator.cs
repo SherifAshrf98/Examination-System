@@ -3,7 +3,7 @@ using Examination.Application.Dtos.QuestionOption;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace Examination.Application.Validators
+namespace Examination.Application.Validators.Question
 {
 	public class QuestionOptionDtoValidator : AbstractValidator<QuestionOptionDto>
 	{

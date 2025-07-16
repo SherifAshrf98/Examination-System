@@ -1,9 +1,13 @@
 ﻿using Examination.Application.Common;
 using Examination.Application.Dtos.AppUser;
+using Examination.Application.Dtos.Student;
 using Examination.Application.Dtos.Subject;
 using Examination.Application.Interfaces;
+using Examination.Application.Interfaces.Repositories;
+using Examination.Domain.Entities.Enums;
 using Examination.Domain.Entities.Identity;
 using Examination.Infrastructure.Data;
+using Examination.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -14,44 +18,44 @@ namespace Examination.Infrastructure.Services
 	{
 		private readonly UserManager<AppUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
-		private readonly AppDbContext _dbContext;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public UserService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, AppDbContext dbContext)
+		public UserService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
-			_dbContext = dbContext;
+			_unitOfWork = unitOfWork;
+		}
+
+		public async Task<Result<bool>> ChangeStudentState(string id, ChangeUserStateDto changeUserStateDto)
+		{
+			var existingUser = await _userManager.FindByIdAsync(id);
+
+			if (existingUser == null)
+				return Result<bool>.NotFound("User Not Found");
+
+			existingUser.Status = changeUserStateDto.Status;
+
+			await _unitOfWork.CompleteAsync();
+
+			return Result<bool>.Success(true);
 		}
 
 		public async Task<Result<Pagination<StudentDto>>> GetAllStudentsAsync(int pageNumber, int pageSize)
 		{
-			var paginatedList = await (from user in _dbContext.Users
-									   join userRole in _dbContext.UserRoles on user.Id equals userRole.UserId
-									   join role in _dbContext.Roles on userRole.RoleId equals role.Id
-									   where role.Name == "Student"
-									   select user)
-							 .Skip((pageNumber - 1) * pageSize)
-							 .Take(pageSize).
-							 Select(user => new StudentDto
-							 {
-								 Id = user.Id,
-								 UserName = user.UserName,
-								 Email = user.Email,
-								 FullName = $"{user.FirstName} {user.LastName}",
-								 status = user.Status.ToString()
-							 }).ToListAsync();
+			var paginated = await _unitOfWork.UserRepository.GetAllStudentsAsync(pageNumber, pageSize);
 
-			return Result<Pagination<StudentDto>>.Success(new Pagination<StudentDto>
+			if (paginated == null)
 			{
-				Items = paginatedList,
-				PageNumber = pageNumber,
-				PageSize = pageSize,
-				TotalCount = await StudentsCountAsync()
-			});
+				return Result<Pagination<StudentDto>>.Failure("No Students Found");
+			}
+
+			return Result<Pagination<StudentDto>>.Success(paginated);
 		}
 		public async Task<Result<StudentDto>> GetStudentByIdAsync(string id)
 		{
 			var student = await _userManager.FindByIdAsync(id);
+
 			if (student is null)
 			{
 				return Result<StudentDto>.Failure("Student not found");
@@ -67,20 +71,26 @@ namespace Examination.Infrastructure.Services
 
 			return Result<StudentDto>.Success(studentDto);
 		}
-
+		public async Task<Result<StudentDto>> GetStudentByUserNameAsync(string userName)
+		{
+			var student = await _userManager.FindByNameAsync(userName);
+			if (student is null)
+			{
+				return Result<StudentDto>.Failure("Student not found");
+			}
+			var studentDto = new StudentDto
+			{
+				Id = student.Id,
+				UserName = student.UserName,
+				Email = student.Email,
+				FullName = $"{student.FirstName} {student.LastName}",
+				status = student.Status.ToString()
+			};
+			return Result<StudentDto>.Success(studentDto);
+		}
 		public async Task<Result<StudentWithSubjectsDto>> GetStudentWithSubjects(string id)
 		{
-			var studentSubjects = await _dbContext.Users.Where(u => u.Id == id)
-				.Include(u => u.StudentSubjects)
-				.ThenInclude(ss => ss.Subject)
-				.Select(s => new StudentWithSubjectsDto
-				{
-					Subjects = s.StudentSubjects.Select(ss => new SubjectDto
-					{
-						id = ss.Subject.Id,
-						Name = ss.Subject.Name,
-					}).ToList()
-				}).FirstOrDefaultAsync();
+			var studentSubjects = await _unitOfWork.UserRepository.GetStudentWithSubjects(id);
 
 			if (studentSubjects is null)
 			{
@@ -89,7 +99,6 @@ namespace Examination.Infrastructure.Services
 
 			return Result<StudentWithSubjectsDto>.Success(studentSubjects);
 		}
-
 		public async Task<Result<int>> GetTotalStudentsCountAsync()
 		{
 			var studntRole = await _roleManager.FindByNameAsync("Student");
@@ -99,25 +108,9 @@ namespace Examination.Infrastructure.Services
 				return Result<int>.Failure("No Students Found");
 			}
 
-			var studentsCount = await _dbContext.UserRoles
-				.Where(ur => ur.RoleId == studntRole.Id)
-				.CountAsync();
+			var studentsCount = await _unitOfWork.UserRepository.GetStudentsCountAsync(studntRole.Id);
 
 			return Result<int>.Success(studentsCount);
-		}
-		private async Task<int> StudentsCountAsync()
-		{
-			var studntRole = await _roleManager.FindByNameAsync("Student");
-
-			if (studntRole is null)
-			{
-				return 0;
-			}
-
-			var studentsCount = await _dbContext.UserRoles
-				.Where(ur => ur.RoleId == studntRole.Id)
-				.CountAsync();
-			return studentsCount;
 		}
 	}
 }

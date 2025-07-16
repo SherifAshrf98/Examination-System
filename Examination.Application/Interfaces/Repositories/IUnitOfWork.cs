@@ -1,4 +1,5 @@
 ﻿using Examination.Domain.Entities;
+using Examination.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Examination.Application.Interfaces.Repositories
 		public ISubjectRepository SubjectsRepository { get; }
 		public IStudentSubjectRepository StudentSubjectsRepository { get; }
 		public IQuestionRepository QuestionsRepository { get; }
+		public IUserRepository UserRepository { get; }
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository { get; }
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository { get; }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Examination.Application.Validators
+namespace Examination.Application.Validators.Question
 {
 	public class CreateQuestionValidator : AbstractValidator<CreateQuestionDto>
 	{

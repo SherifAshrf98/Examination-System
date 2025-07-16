@@ -15,6 +15,7 @@ namespace Examination.Infrastructure.Repositories
 		private readonly IExamRepository _exams;
 		private readonly ISubjectRepository _subjects;
 		private readonly IStudentSubjectRepository _studentSubjects;
+		private readonly IUserRepository _user;
 		private readonly IQuestionRepository _questions;
 		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
@@ -25,6 +26,7 @@ namespace Examination.Infrastructure.Repositories
 		IExamRepository exams,
 		ISubjectRepository subjects,
 		IQuestionRepository questions,
+		IUserRepository user,
 		IStudentSubjectRepository StudentSubjects,
 		IGenericRepository<ExamSubmission> examSubmissions,
 		IGenericRepository<ExamQuestion> examQuestions,
@@ -40,11 +42,13 @@ namespace Examination.Infrastructure.Repositories
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
 			_studentSubjects = StudentSubjects;
+			_user = user;
 		}
 		public IExamRepository ExamsRepository => _exams;
 		public ISubjectRepository SubjectsRepository => _subjects;
 		public IStudentSubjectRepository StudentSubjectsRepository => _studentSubjects;
 		public IQuestionRepository QuestionsRepository => _questions;
+		public IUserRepository UserRepository => _user;
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;

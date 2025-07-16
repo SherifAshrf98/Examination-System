@@ -1,6 +1,7 @@
 ﻿using Examination.Api.Helpers;
 using Examination.Application.Common;
 using Examination.Application.Dtos.AppUser;
+using Examination.Application.Dtos.Student;
 using Examination.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -74,7 +75,6 @@ namespace Examination.Api.Controllers
 			return Ok(new ApiResponse<StudentDto>(200, result.Value));
 		}
 
-		[Authorize(Roles = "Student")]
 		[HttpGet("{id}/Subjects")]
 		public async Task<IActionResult> GetStudentWithSubjects(string id)
 		{
@@ -88,6 +88,21 @@ namespace Examination.Api.Controllers
 				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 			return Ok(new ApiResponse<StudentWithSubjectsDto>(200, result.Value));
+		}
+
+		[HttpPut("{id}/state")]
+		public async Task<IActionResult> ChangeStudentState(string id, ChangeUserStateDto changeUserStateDto)
+		{
+			var result = await _userServices.ChangeStudentState(id, changeUserStateDto);
+
+			if (!result.IsSuccess)
+			{
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
+			}
+			return Ok(new ApiResponse(204, "Student state changed successfully"));
 		}
 	}
 }

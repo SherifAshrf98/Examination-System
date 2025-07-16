@@ -1,5 +1,6 @@
 ﻿using Examination.Application.Common;
 using Examination.Application.Dtos.AppUser;
+using Examination.Application.Dtos.Student;
 using Examination.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Examination.Application.Interfaces
 {
 	public interface IUserService
 	{
+		Task<Result<bool>> ChangeStudentState(string id, ChangeUserStateDto changeUserStateDto);
 		Task<Result<StudentWithSubjectsDto>> GetStudentWithSubjects(string id);
 		Task<Result<Pagination<StudentDto>>> GetAllStudentsAsync(int pageNumber, int pageSize);
 		Task<Result<int>> GetTotalStudentsCountAsync();
