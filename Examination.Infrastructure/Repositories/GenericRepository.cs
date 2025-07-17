@@ -47,5 +47,10 @@ namespace Examination.Infrastructure.Repositories
 		{
 			return await _dbContext.Set<T>().AnyAsync(predicate);
 		}
+
+		public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+		{
+			return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
+		}
 	}
 }

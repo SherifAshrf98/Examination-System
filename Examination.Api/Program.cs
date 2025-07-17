@@ -129,6 +129,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<IStudentSubjectService, StudentSubjectService>();
 			builder.Services.AddScoped<IQuestionService, QuestionService>();
 			builder.Services.AddScoped<IUserService, UserService>();
+			builder.Services.AddScoped<IExamConfigurationsService, ExamConfigurationsService>();
 
 			#endregion
 

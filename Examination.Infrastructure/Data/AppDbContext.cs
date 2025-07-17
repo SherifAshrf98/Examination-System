@@ -26,9 +26,10 @@ namespace Examination.Infrastructure.Data
 		}
 
 		public DbSet<Subject> Subjects { get; set; }
+		public DbSet<ExamConfigurations> ExamConfigurations { get; set; }
 		public DbSet<Question> Questions { get; set; }
 		public DbSet<QuestionOption> QuestionOptions { get; set; }
-		public DbSet<Exam> Exams { get; set; }
+		public DbSet<Exam> Exams { get; set; }	
 		public DbSet<ExamQuestion> ExamQuestions { get; set; }
 		public DbSet<ExamSubmission> Submissions { get; set; }
 		public DbSet<SubmissionAnswer> SubmissionAnswers { get; set; }

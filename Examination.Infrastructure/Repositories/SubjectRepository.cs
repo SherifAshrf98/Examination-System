@@ -14,8 +14,18 @@ namespace Examination.Infrastructure.Repositories
 		{
 			_dbcontext = context;
 		}
+		public async Task<IReadOnlyList<SubjectDto>> GetAllSubjectsAsync()
+		{
+			return await _dbcontext.Subjects
+				.OrderBy(s => s.Name)
+				.Select(s => new SubjectDto
+				{
+					id = s.Id,
+					Name = s.Name
+				}).ToListAsync();
 
-		public async Task<Pagination<SubjectDto>> GetAllSubjectsAsync(int pageNumber, int pageSize)
+		}
+		public async Task<Pagination<SubjectDto>> GetAllSubjectsPaginatedAsync(int pageNumber, int pageSize)
 		{
 
 			var Items = await _dbcontext.Subjects
@@ -28,13 +38,14 @@ namespace Examination.Infrastructure.Repositories
 					Name = s.Name
 				}).ToListAsync();
 
-			var count = await GetTotalSubjectsCountAsync();
+			var count = await _dbcontext.Subjects.CountAsync();
 
 			return new Pagination<SubjectDto>
 			{
 				Items = Items,
 				PageNumber = pageNumber,
 				PageSize = pageSize,
+				PageCount = (int)Math.Ceiling((double)count / pageSize),
 				TotalCount = count
 			};
 		}

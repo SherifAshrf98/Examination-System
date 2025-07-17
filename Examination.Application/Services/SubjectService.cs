@@ -15,9 +15,9 @@ namespace Examination.Application.Services
 			_unitOfWork = unitOfWork;
 		}
 
-		public async Task<Result<Pagination<SubjectDto>>> GetAllSubjectsAsync(int pageNumber, int pageSize)
+		public async Task<Result<Pagination<SubjectDto>>> GetAllSubjectsPaginatedAsync(int pageNumber, int pageSize)
 		{
-			var paginagtion = await _unitOfWork.SubjectsRepository.GetAllSubjectsAsync(pageNumber, pageSize);
+			var paginagtion = await _unitOfWork.SubjectsRepository.GetAllSubjectsPaginatedAsync(pageNumber, pageSize);
 
 			return Result<Pagination<SubjectDto>>.Success(paginagtion);
 		}
@@ -88,6 +88,16 @@ namespace Examination.Application.Services
 			await _unitOfWork.CompleteAsync();
 
 			return Result<bool>.Success(true);
+		}
+
+		public async Task<Result<IReadOnlyList<SubjectDto>>> GetAllSubjectsAsync()
+		{
+			var subjects = await _unitOfWork.SubjectsRepository.GetAllSubjectsAsync();
+
+			if (subjects == null)
+				return Result<IReadOnlyList<SubjectDto>>.NotFound("subjects Not Found");
+
+			return Result<IReadOnlyList<SubjectDto>>.Success(subjects);
 		}
 	}
 }

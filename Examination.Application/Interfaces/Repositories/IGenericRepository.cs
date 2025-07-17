@@ -13,6 +13,7 @@ namespace Examination.Application.Interfaces.Repositories
 		Task<IReadOnlyList<T>> GetAllAsync();
 		Task AddAsync(T entity);
 		void Delete(T entity);
+		Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
 		Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate);
 		Task<bool> IsExistingAsync(Expression<Func<T, bool>> predicate);
 	}

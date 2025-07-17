@@ -11,7 +11,8 @@ namespace Examination.Application.Interfaces
 {
 	public interface ISubjectService
 	{
-		Task<Result<Pagination<SubjectDto>>> GetAllSubjectsAsync(int pageNumber, int pageSize);
+		Task<Result<IReadOnlyList<SubjectDto>>> GetAllSubjectsAsync();
+		Task<Result<Pagination<SubjectDto>>> GetAllSubjectsPaginatedAsync(int pageNumber, int pageSize);
 		Task<Result<SubjectDto>> GetSubjectByIdAsync(int id);
 		Task<Result<bool>> AddSubjectAsync(CreateSubjectDto subject);
 		Task<Result<bool>> UpdateSubjectAsync(int id, UpdateSubjectDto subject);

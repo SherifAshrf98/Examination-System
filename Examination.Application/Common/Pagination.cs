@@ -10,6 +10,7 @@ namespace Examination.Application.Common
 	{
 		public int PageNumber { get; set; }
 		public int PageSize { get; set; }
+		public int PageCount { get; set; }
 		public int TotalCount { get; set; }
 		public IReadOnlyList<T> Items { get; set; }
 	}

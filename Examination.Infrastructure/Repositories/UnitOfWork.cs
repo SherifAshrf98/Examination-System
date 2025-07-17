@@ -17,6 +17,7 @@ namespace Examination.Infrastructure.Repositories
 		private readonly IStudentSubjectRepository _studentSubjects;
 		private readonly IUserRepository _user;
 		private readonly IQuestionRepository _questions;
+		private readonly IGenericRepository<ExamConfigurations> _examConfigurations;
 		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
@@ -28,6 +29,7 @@ namespace Examination.Infrastructure.Repositories
 		IQuestionRepository questions,
 		IUserRepository user,
 		IStudentSubjectRepository StudentSubjects,
+		IGenericRepository<ExamConfigurations> examConfigurations,
 		IGenericRepository<ExamSubmission> examSubmissions,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
@@ -42,6 +44,7 @@ namespace Examination.Infrastructure.Repositories
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
 			_studentSubjects = StudentSubjects;
+			_examConfigurations = examConfigurations;
 			_user = user;
 		}
 		public IExamRepository ExamsRepository => _exams;
@@ -53,6 +56,7 @@ namespace Examination.Infrastructure.Repositories
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository => _submissionAnswers;
+		public IGenericRepository<ExamConfigurations> ExamConfigurationsRepository => _examConfigurations;
 
 		public async Task<int> CompleteAsync()
 		{

@@ -11,8 +11,9 @@ namespace Examination.Application.Interfaces.Repositories
 {
 	public interface ISubjectRepository : IGenericRepository<Subject>
 	{
+		public Task<IReadOnlyList<SubjectDto>> GetAllSubjectsAsync();
 		Task<Subject> GetSubjectByNameAsync(string name);
-		Task<Pagination<SubjectDto>> GetAllSubjectsAsync(int pageNumber, int pageSize);
+		Task<Pagination<SubjectDto>> GetAllSubjectsPaginatedAsync(int pageNumber, int pageSize);
 		Task<int> GetTotalSubjectsCountAsync();
 	}
 }
