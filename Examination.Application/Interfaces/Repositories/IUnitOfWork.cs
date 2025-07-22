@@ -15,6 +15,7 @@ namespace Examination.Application.Interfaces.Repositories
 		public IStudentSubjectRepository StudentSubjectsRepository { get; }
 		public IQuestionRepository QuestionsRepository { get; }
 		public IUserRepository UserRepository { get; }
+		public IDashboardRepository DashboardRepository { get; }
 		public IGenericRepository<ExamConfigurations> ExamConfigurationsRepository { get; }
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository { get; }
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }

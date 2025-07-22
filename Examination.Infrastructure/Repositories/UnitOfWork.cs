@@ -22,6 +22,7 @@ namespace Examination.Infrastructure.Repositories
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
 		private readonly IGenericRepository<SubmissionAnswer> _submissionAnswers;
+		private readonly IDashboardRepository _dashboard;
 
 		public UnitOfWork(AppDbContext dbContext,
 		IExamRepository exams,
@@ -33,7 +34,8 @@ namespace Examination.Infrastructure.Repositories
 		IGenericRepository<ExamSubmission> examSubmissions,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
-		IGenericRepository<SubmissionAnswer> submissionAnswers)
+		IGenericRepository<SubmissionAnswer> submissionAnswers,
+		IDashboardRepository dashboard)
 		{
 			_dbContext = dbContext;
 			_exams = exams;
@@ -43,6 +45,7 @@ namespace Examination.Infrastructure.Repositories
 			_examQuestions = examQuestions;
 			_questionOptions = questionOptions;
 			_submissionAnswers = submissionAnswers;
+			_dashboard = dashboard;
 			_studentSubjects = StudentSubjects;
 			_examConfigurations = examConfigurations;
 			_user = user;
@@ -51,7 +54,8 @@ namespace Examination.Infrastructure.Repositories
 		public ISubjectRepository SubjectsRepository => _subjects;
 		public IStudentSubjectRepository StudentSubjectsRepository => _studentSubjects;
 		public IQuestionRepository QuestionsRepository => _questions;
-		public IUserRepository UserRepository => _user;
+		public IUserRepository UserRepository => _user;	
+		public IDashboardRepository DashboardRepository => _dashboard;
 		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;

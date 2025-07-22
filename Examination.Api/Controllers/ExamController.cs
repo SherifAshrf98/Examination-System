@@ -34,6 +34,7 @@ namespace Examination.Api.Controllers
 			}
 			return Ok(new ApiResponse<ExamDto>(200, result.Value));
 		}
+
 		[Authorize]
 		[HttpPost("request")]
 		public async Task<IActionResult> CreateExam(int subjectId)

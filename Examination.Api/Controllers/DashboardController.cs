@@ -1,4 +1,7 @@
-﻿using Examination.Application.Interfaces.Repositories;
+﻿using Examination.Api.Helpers;
+using Examination.Application.Dtos;
+using Examination.Application.Interfaces;
+using Examination.Application.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,19 +12,22 @@ namespace Examination.Api.Controllers
 	[ApiController]
 	public class DashboardController : ControllerBase
 	{
-		private readonly IUnitOfWork _unitOfWork;
+		private readonly IDashboardService _dashboardService;
 
-		public DashboardController(IUnitOfWork unitOfWork)
+		public DashboardController(IDashboardService dashboardService)
 		{
-			_unitOfWork = unitOfWork;
+			_dashboardService = dashboardService;
 		}
 
-		//[HttpGet]
-		//public async Task<IActionResult> GetDashboardData()
-		//{
+		[HttpGet("summary")]
+		public async Task<IActionResult> GetDashboardSummary()
+		{
+			var result = await _dashboardService.GetDashboardStatsAsync();
 
+			if (!result.IsSuccess)
+				return BadRequest(new ApiResponse(400, result.Errors.First()));
 
-	
-		//}
+			return Ok(new ApiResponse<DashboardStatsDto>(200, result.Value));
+		}
 	}
 }

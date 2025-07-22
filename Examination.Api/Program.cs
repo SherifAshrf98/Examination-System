@@ -168,6 +168,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<IStudentSubjectRepository, StudentSubjectRepository>();
 			builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
+			builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IAuthService, AuthService>();
@@ -176,6 +177,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<IQuestionService, QuestionService>();
 			builder.Services.AddScoped<IExamService, ExamService>();
 			builder.Services.AddScoped<IUserService, UserService>();
+			builder.Services.AddScoped<IDashboardService, DashboardService>();
 			builder.Services.AddScoped<IExamConfigurationsService, ExamConfigurationsService>();
 
 			#endregion
