@@ -19,18 +19,9 @@ namespace Examination.Api.Controllers
 		//[HttpGet]
 		//public async Task<IActionResult> GetDashboardData()
 		//{
-		//	var totalQuestions = await _unitOfWork.QuestionsRepository.();
-		//	var totalExams = await _unitOfWork.ExamsRepository.;
-		//	var totalUsers = await _unitOfWork.UserRepository.CountAsync();
-		//	var dashboardData = new
-		//	{
-		//		TotalQuestions = totalQuestions,
-		//		TotalExams = totalExams,
-		//		TotalUsers = totalUsers
-		//	};
-		//	return Ok(new { StatusCode = 200, Data = dashboardData });
+
+
+	
 		//}
-
-
 	}
 }

@@ -21,6 +21,7 @@ namespace Examination.Api.Controllers
 		public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
 		{
 			var result = await _authService.RegisterAsync(registerDto);
+
 			if (!result.IsSuccess)
 			{
 				if (result.IsNotFound)
@@ -28,7 +29,7 @@ namespace Examination.Api.Controllers
 
 				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
-			return Ok(new ApiResponse(201, "Registeration Succeeded "));
+			return Ok(new ApiResponse(200, "Registeration Succeeded "));
 		}
 
 		[HttpPost("login")]

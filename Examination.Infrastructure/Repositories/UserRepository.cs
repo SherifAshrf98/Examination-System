@@ -45,6 +45,7 @@ namespace Examination.Infrastructure.Repositories
 				Items = paginatedList,
 				PageNumber = pageNumber,
 				PageSize = pageSize,
+				PageCount = (int)Math.Ceiling((double)totalCount / pageSize),
 				TotalCount = totalCount
 			};
 		}

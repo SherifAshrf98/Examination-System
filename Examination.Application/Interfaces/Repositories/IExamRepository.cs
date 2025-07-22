@@ -1,4 +1,5 @@
-﻿using Examination.Domain.Entities;
+﻿using Examination.Application.Dtos.Exam;
+using Examination.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Examination.Application.Interfaces.Repositories
 {
 	public interface IExamRepository : IGenericRepository<Exam>
 	{
-		Task<IEnumerable<ExamSubmission>> GetAllSubmittedExamsAsync();
+		Task<Exam?> GetInProgressExamById(string studentId, int subjectId);
+		Task<ExamDto> GetExamByIdAsync(int id);
 	}
 }

@@ -4,6 +4,7 @@ using Examination.Application.Dtos.AppUser;
 using Examination.Application.Dtos.ExamConfigurations;
 using Examination.Application.Dtos.Subject;
 using Examination.Application.Interfaces;
+using Examination.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,15 @@ namespace Examination.Api.Controllers
 	{
 		private readonly ISubjectService _subjectService;
 		private readonly IExamConfigurationsService _examConfigurationsService;
+		private readonly IQuestionService _questionService;
 
-		public SubjectController(ISubjectService subjectService, IExamConfigurationsService examConfigurationsService)
+		public SubjectController(ISubjectService subjectService, IExamConfigurationsService examConfigurationsService,IQuestionService questionService)
 		{
 			_subjectService = subjectService;
 
 			_examConfigurationsService = examConfigurationsService;
+
+			_questionService = questionService;
 		}
 
 		[HttpGet("all")]
@@ -36,6 +40,7 @@ namespace Examination.Api.Controllers
 
 				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
+
 			return Ok(new ApiResponse<IReadOnlyList<SubjectDto>>(200, result.Value));
 		}
 
@@ -43,7 +48,6 @@ namespace Examination.Api.Controllers
 		public async Task<IActionResult> GetAllSubjectsWithPagination(int pageNumber, int PageSize)
 		{
 			var result = await _subjectService.GetAllSubjectsPaginatedAsync(pageNumber, PageSize);
-
 
 			return Ok(new ApiResponse<Pagination<SubjectDto>>(200, result.Value));
 		}
@@ -156,5 +160,19 @@ namespace Examination.Api.Controllers
 			}
 			return Ok(new ApiResponse(200, "Exam Configurations Updated Successfully"));
 		}
+
+		//[HttpGet("{id}/randomQuestions")]
+		//public async Task<IActionResult> GetRandomQuestions(int id, int numOfEasy, int numOfMedium, int numOfHard)
+		//{
+		//	var result = await _questionService.GetRandomQuestionsAsync(id, numOfEasy, numOfMedium, numOfHard);
+		//	if (!result.IsSuccess)
+		//	{
+		//		if (result.IsNotFound)
+		//			return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+		//		return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
+		//	}
+		//	return Ok(new ApiResponse<IReadOnlyList<Question>>(200, result.Value));
+		//}
+
 	}
 }

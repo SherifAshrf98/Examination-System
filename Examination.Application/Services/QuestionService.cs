@@ -62,5 +62,16 @@ namespace Examination.Application.Services
 
 			return Result<int>.Success(newQuestion.Id);
 		}
+
+		public async Task<Result<IReadOnlyList<Question>>> GetRandomQuestionsAsync(int subjectId, int numOfEasy, int numOfMedium, int numOfHard)
+		{
+			var questions = await _unitOfWork.QuestionsRepository.GetRandomQuestions(subjectId, numOfEasy, numOfMedium, numOfHard);
+
+			if (questions == null || !questions.Any())
+			{
+				return Result<IReadOnlyList<Question>>.NotFound("No questions found for the specified criteria.");
+			}
+			return Result<IReadOnlyList<Question>>.Success(questions);
+		}
 	}
 }

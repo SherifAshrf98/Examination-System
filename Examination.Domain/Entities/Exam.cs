@@ -1,4 +1,5 @@
-﻿using Examination.Domain.Entities.Identity;
+﻿using Examination.Domain.Entities.Enums;
+using Examination.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,12 @@ namespace Examination.Domain.Entities
 	{
 		public DateTime StartedAt { get; set; }
 		public int Duration { get; set; }
-		public string StudentId{ get; set; }
+		public string StudentId { get; set; }
 		public int SubjectId { get; set; }
+		public ExamStatus status { get; set; } = ExamStatus.InProgress;
 		public AppUser Student { get; set; }
 		public Subject Subject { get; set; }
-		public ICollection<ExamQuestion> ExamQuestions { get; set; }	
-		public ExamSubmission Submission { get; set; }
+		public ICollection<ExamQuestion> ExamQuestions { get; set; }
+		public ExamSubmission? Submission { get; set; }
 	}
-}	
+}

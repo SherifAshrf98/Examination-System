@@ -74,6 +74,7 @@ namespace Examination.Infrastructure.Services
 		public async Task<Result<StudentDto>> GetStudentByUserNameAsync(string userName)
 		{
 			var student = await _userManager.FindByNameAsync(userName);
+
 			if (student is null)
 			{
 				return Result<StudentDto>.Failure("Student not found");
@@ -86,6 +87,7 @@ namespace Examination.Infrastructure.Services
 				FullName = $"{student.FirstName} {student.LastName}",
 				status = student.Status.ToString()
 			};
+
 			return Result<StudentDto>.Success(studentDto);
 		}
 		public async Task<Result<StudentWithSubjectsDto>> GetStudentWithSubjects(string id)

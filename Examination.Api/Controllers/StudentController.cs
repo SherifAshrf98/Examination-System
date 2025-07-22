@@ -44,6 +44,7 @@ namespace Examination.Api.Controllers
 			return Ok(new ApiResponse(200, "Student enrolled successfully"));
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<IActionResult> GetAllStudents(int pageNumber, int pageSize)
 		{

@@ -2,6 +2,7 @@
 using Examination.Application.Dtos.QuestionOption;
 using Examination.Application.Interfaces.Repositories;
 using Examination.Domain.Entities;
+using Examination.Domain.Entities.Enums;
 using Examination.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,6 +38,40 @@ namespace Examination.Infrastructure.Repositories
 						IsCorrect = opt.IsCorrect
 					}).ToList()
 				}).FirstOrDefaultAsync();
+		}
+
+		public async Task<IReadOnlyList<Question>> GetRandomQuestions(int subjectId, int numOfEasy, int numOfMedium, int numOfHard)
+		{
+			var questions = await _context.Questions
+							.Where(q => q.SubjectId == subjectId)
+							.ToListAsync();
+
+			var random = new Random();
+
+			var easyQuestions = questions
+				.Where(q => q.Difficulty == DifficultyLevel.Easy)
+				.OrderBy(q => random.Next())
+				.Take(numOfEasy)
+				.ToList();
+
+			var mediumQuestions = questions
+				.Where(q => q.Difficulty == DifficultyLevel.Medium)
+				.OrderBy(q => random.Next())
+				.Take(numOfMedium)
+				.ToList();
+
+			var hardQuestions = questions
+				.Where(q => q.Difficulty == DifficultyLevel.Hard)
+				.OrderBy(q => random.Next())
+				.Take(numOfHard)
+				.ToList();
+
+
+			var AllQuestions = easyQuestions.Concat(mediumQuestions)
+											.Concat(hardQuestions)
+											.OrderBy(q => random.Next())
+											.ToList();
+			return AllQuestions;
 		}
 	}
 }

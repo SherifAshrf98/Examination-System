@@ -11,5 +11,6 @@ namespace Examination.Application.Interfaces.Repositories
 	public interface IQuestionRepository : IGenericRepository<Question>
 	{
 		public Task<QuestionDto> GetQuestionWithOptions(int id);
+		public Task<IReadOnlyList<Question>> GetRandomQuestions(int subjectId, int numOfEasy, int numOfMedium, int numOfHard);
 	}
 }

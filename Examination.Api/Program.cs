@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -29,6 +30,17 @@ namespace Examination.Api
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowFrontend",
+					policy =>
+					{
+						policy.WithOrigins("http://localhost:4200")
+							  .AllowAnyHeader()
+							  .AllowAnyMethod();
+					});
+			});
+
 			builder.Services.AddControllers().AddJsonOptions(options =>
 			{
 				options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -37,7 +49,41 @@ namespace Examination.Api
 			#region SwaggerServices 
 
 			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+
+			builder.Services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Description = @"JWT Authorization header using the Bearer scheme.  
+                      Enter 'Bearer' [space] and then your token in the text input below.  
+                      Example: 'Bearer abcdef12345'",
+					Name = "Authorization",
+					In = ParameterLocation.Header,
+					Type = SecuritySchemeType.ApiKey,
+					Scheme = "Bearer"
+				});
+
+
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+				{
+					 {
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
+							{
+								  Type = ReferenceType.SecurityScheme,
+								  Id = "Bearer"
+							},
+							Scheme = "oauth2",
+							Name = "Bearer",
+							In = ParameterLocation.Header
+						},
+						new List<string>()
+					 }
+				});
+			});
 
 			#endregion
 
@@ -128,6 +174,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<ISubjectService, SubjectService>();
 			builder.Services.AddScoped<IStudentSubjectService, StudentSubjectService>();
 			builder.Services.AddScoped<IQuestionService, QuestionService>();
+			builder.Services.AddScoped<IExamService, ExamService>();
 			builder.Services.AddScoped<IUserService, UserService>();
 			builder.Services.AddScoped<IExamConfigurationsService, ExamConfigurationsService>();
 
@@ -162,9 +209,14 @@ namespace Examination.Api
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
-				app.UseSwaggerUI();
+				app.UseSwaggerUI(c =>
+				{
+					c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+				});
 			}
 			app.UseHttpsRedirection();
+
+			app.UseCors("AllowFrontend");
 
 			app.UseAuthentication();
 
