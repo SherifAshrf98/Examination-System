@@ -17,8 +17,8 @@ namespace Examination.Infrastructure.Repositories
 		private readonly IStudentSubjectRepository _studentSubjects;
 		private readonly IUserRepository _user;
 		private readonly IQuestionRepository _questions;
+		private readonly IExamSubmisisonRepository _examSubmissions;
 		private readonly IGenericRepository<ExamConfigurations> _examConfigurations;
-		private readonly IGenericRepository<ExamSubmission> _examSubmissions;
 		private readonly IGenericRepository<ExamQuestion> _examQuestions;
 		private readonly IGenericRepository<QuestionOption> _questionOptions;
 		private readonly IGenericRepository<SubmissionAnswer> _submissionAnswers;
@@ -31,7 +31,7 @@ namespace Examination.Infrastructure.Repositories
 		IUserRepository user,
 		IStudentSubjectRepository StudentSubjects,
 		IGenericRepository<ExamConfigurations> examConfigurations,
-		IGenericRepository<ExamSubmission> examSubmissions,
+		IExamSubmisisonRepository examSubmissions,
 		IGenericRepository<ExamQuestion> examQuestions,
 		IGenericRepository<QuestionOption> questionOptions,
 		IGenericRepository<SubmissionAnswer> submissionAnswers,
@@ -54,13 +54,13 @@ namespace Examination.Infrastructure.Repositories
 		public ISubjectRepository SubjectsRepository => _subjects;
 		public IStudentSubjectRepository StudentSubjectsRepository => _studentSubjects;
 		public IQuestionRepository QuestionsRepository => _questions;
-		public IUserRepository UserRepository => _user;	
+		public IUserRepository UserRepository => _user;
 		public IDashboardRepository DashboardRepository => _dashboard;
-		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository => _examSubmissions;
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository => _examQuestions;
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository => _questionOptions;
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository => _submissionAnswers;
 		public IGenericRepository<ExamConfigurations> ExamConfigurationsRepository => _examConfigurations;
+		public IExamSubmisisonRepository ExamSubmissionsRepository => _examSubmissions;
 
 		public async Task<int> CompleteAsync()
 		{

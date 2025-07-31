@@ -1,4 +1,7 @@
-﻿using Examination.Application.Dtos.Exam;
+﻿
+
+using Examination.Application.Common;
+using Examination.Application.Dtos.Exam;
 using Examination.Application.Interfaces.Repositories;
 using Examination.Domain.Entities;
 using Examination.Domain.Entities.Enums;
@@ -45,7 +48,7 @@ namespace Examination.Infrastructure.Repositories
 				}).FirstOrDefaultAsync();
 		}
 
-		public async Task<Exam?> GetInProgressExamById(string studentId, int subjectId)
+		public async Task<Exam?> GetInProgressExam(string studentId, int subjectId)
 		{
 			return await _dbContext.Exams
 				.Include(e => e.Subject)
@@ -53,6 +56,69 @@ namespace Examination.Infrastructure.Repositories
 					.ThenInclude(eq => eq.Question)
 						.ThenInclude(q => q.Options)
 				.FirstOrDefaultAsync(e => e.StudentId == studentId && e.SubjectId == subjectId && e.status == ExamStatus.InProgress);
+		}
+
+		public async Task<Pagination<ExamHistoryDto>> GetExamHistory(int pageNumber, int pageSize)
+		{
+			var PaginatedList = await _dbContext.Exams
+				.OrderByDescending(e => e.StartedAt)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize).Select(e => new ExamHistoryDto
+				{
+					Duration = e.Duration,
+					StartedAt = e.StartedAt,
+					StudentName = $"{e.Student.FirstName}{e.Student.LastName}",
+					SubjectName = e.Subject.Name,
+					Score = e.Submission.Score ?? 60
+				}).ToListAsync();
+
+			var totalCount = await _dbContext.Exams.CountAsync();
+
+			return new Pagination<ExamHistoryDto>
+			{
+				Items = PaginatedList,
+				PageNumber = pageNumber,
+				PageSize = pageSize,
+				PageCount = (int)Math.Ceiling((double)totalCount / pageSize),
+				TotalCount = totalCount
+			};
+		}
+
+		public async Task<Pagination<ExamHistoryDto>> GetExamHistoryByStudentId(string studentId, int pageNumber, int pageSize)
+		{
+			var PaginatedList = await _dbContext.Exams
+				.Where(e => e.StudentId == studentId)
+				.OrderBy(e => e.Subject.Name)
+				.Skip((pageNumber - 1) * pageSize)
+				.Take(pageSize).Select(e => new ExamHistoryDto
+				{
+					Duration = e.Duration,
+					StartedAt = e.StartedAt,
+					StudentName = $"{e.Student.FirstName}{e.Student.LastName}",
+					SubjectName = e.Subject.Name,
+					Score = e.Submission.Score ?? 60
+				}).ToListAsync();
+
+			var totalCount = await _dbContext.Exams.CountAsync(e => e.StudentId == studentId);
+
+			return new Pagination<ExamHistoryDto>
+			{
+				Items = PaginatedList,
+				PageNumber = pageNumber,
+				PageSize = pageSize,
+				PageCount = (int)Math.Ceiling((double)totalCount / pageSize),
+				TotalCount = totalCount
+			};
+		}
+
+		public async Task<Exam?> GetExamWithQuestionsAndAnswers(int id)
+		{
+			return await _dbContext.Exams
+				.Include(e => e.Subject)
+				.Include(e => e.ExamQuestions)
+					.ThenInclude(eq => eq.Question)
+						.ThenInclude(q => q.Options)
+						.FirstOrDefaultAsync(e => e.Id == id);
 		}
 	}
 }

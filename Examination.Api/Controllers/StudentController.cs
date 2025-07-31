@@ -3,6 +3,7 @@ using Examination.Application.Common;
 using Examination.Application.Dtos.AppUser;
 using Examination.Application.Dtos.Student;
 using Examination.Application.Interfaces;
+using Examination.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -89,6 +90,22 @@ namespace Examination.Api.Controllers
 				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
 			return Ok(new ApiResponse<StudentWithSubjectsDto>(200, result.Value));
+		}
+		[HttpGet("Exams")]
+		public async Task<IActionResult> GetStudentExams(int pageNumber, int pageSize)
+		{
+			var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var result = await _userServices.GetExamsHistory(studentId, pageNumber, pageSize);
+
+			if (!result.IsSuccess)
+			{
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
+			}
+			return Ok(new ApiResponse<Pagination<ExamHistoryDto>>(200, result.Value));
 		}
 
 		[HttpPut("{id}/state")]

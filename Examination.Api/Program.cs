@@ -1,4 +1,7 @@
 using Examination.Api.Helpers;
+using Examination.Api.SignalR;
+using Examination.Api.SignalR.Hubs;
+using Examination.Api.SignalR.Services;
 using Examination.Application.Common;
 using Examination.Application.Interfaces;
 using Examination.Application.Interfaces.Repositories;
@@ -7,13 +10,16 @@ using Examination.Application.Validators;
 using Examination.Domain.Entities.Identity;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Data.Seeding;
+using Examination.Infrastructure.Messaging.Consumers;
 using Examination.Infrastructure.Repositories;
 using Examination.Infrastructure.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +51,8 @@ namespace Examination.Api
 			{
 				options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 			});
+
+			builder.Services.AddSignalR();
 
 			#region SwaggerServices 
 
@@ -162,6 +170,8 @@ namespace Examination.Api
 
 			#region AddApplicationServices
 
+			builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+			builder.Services.AddSingleton<INotificationService, NotificationService>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
 			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
@@ -169,6 +179,7 @@ namespace Examination.Api
 			builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 			builder.Services.AddScoped<IUserRepository, UserRepository>();
 			builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+			builder.Services.AddScoped<IExamSubmisisonRepository, ExamSubmisisonRepository>();
 			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IAuthService, AuthService>();
@@ -182,7 +193,28 @@ namespace Examination.Api
 
 			#endregion
 
+			builder.Services.AddMassTransit(x =>
+			{
+				x.AddConsumer<ExamEvaluatedConsumer>();
+
+				x.UsingRabbitMq((ctx, cfg) =>
+				{
+					cfg.Host("localhost", "/", h =>
+					{
+						h.Username("guest");
+						h.Password("guest");
+					});
+
+					cfg.ReceiveEndpoint("exam-evaluated-queue", e =>
+					{
+						e.ConfigureConsumer<ExamEvaluatedConsumer>(ctx);
+					});
+				});
+			});
+
 			var app = builder.Build();
+
+			app.MapHub<NotificationHub>("/hubs/notifications");
 
 			#region IdentitySeeding
 

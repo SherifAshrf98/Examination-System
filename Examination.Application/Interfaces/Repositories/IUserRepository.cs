@@ -13,5 +13,6 @@ namespace Examination.Infrastructure.Repositories
 		Task<Pagination<StudentDto>> GetAllStudentsAsync(int pageNumber, int pageSize);
 		Task<StudentWithSubjectsDto> GetStudentWithSubjects(string id);
 		Task<int> GetStudentsCountAsync(string id);
+
 	}
 }

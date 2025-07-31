@@ -2,6 +2,7 @@
 using Examination.Application.Dtos.AppUser;
 using Examination.Application.Dtos.Student;
 using Examination.Domain.Entities.Identity;
+using Examination.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Examination.Application.Interfaces
 		Task<Result<Pagination<StudentDto>>> GetAllStudentsAsync(int pageNumber, int pageSize);
 		Task<Result<int>> GetTotalStudentsCountAsync();
 		Task<Result<StudentDto>> GetStudentByIdAsync(string id);
+		Task<Result<Pagination<ExamHistoryDto>>> GetExamsHistory(string studentId, int pageNumber, int pageSize);
 	}
 }

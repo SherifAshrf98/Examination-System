@@ -160,19 +160,5 @@ namespace Examination.Api.Controllers
 			}
 			return Ok(new ApiResponse(200, "Exam Configurations Updated Successfully"));
 		}
-
-		//[HttpGet("{id}/randomQuestions")]
-		//public async Task<IActionResult> GetRandomQuestions(int id, int numOfEasy, int numOfMedium, int numOfHard)
-		//{
-		//	var result = await _questionService.GetRandomQuestionsAsync(id, numOfEasy, numOfMedium, numOfHard);
-		//	if (!result.IsSuccess)
-		//	{
-		//		if (result.IsNotFound)
-		//			return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
-		//		return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
-		//	}
-		//	return Ok(new ApiResponse<IReadOnlyList<Question>>(200, result.Value));
-		//}
-
 	}
 }

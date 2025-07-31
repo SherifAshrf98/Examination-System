@@ -16,9 +16,9 @@ namespace Examination.Application.Interfaces.Repositories
 		public IQuestionRepository QuestionsRepository { get; }
 		public IUserRepository UserRepository { get; }
 		public IDashboardRepository DashboardRepository { get; }
+		public IExamSubmisisonRepository ExamSubmissionsRepository { get; }
 		public IGenericRepository<ExamConfigurations> ExamConfigurationsRepository { get; }
 		public IGenericRepository<QuestionOption> QuestionOptionsRepository { get; }
-		public IGenericRepository<ExamSubmission> ExamSubmissionsRepository { get; }
 		public IGenericRepository<SubmissionAnswer> SubmissionAnswersRepository { get; }
 		public IGenericRepository<ExamQuestion> ExamQuestionsRepository { get; }
 		public Task<int> CompleteAsync();

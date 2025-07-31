@@ -114,5 +114,13 @@ namespace Examination.Infrastructure.Services
 
 			return Result<int>.Success(studentsCount);
 		}
+
+		public async Task<Result<Pagination<ExamHistoryDto>>> GetExamsHistory(string studentId, int pageNumber, int pageSize)
+		{
+
+			var paginatedExams = await _unitOfWork.ExamsRepository.GetExamHistoryByStudentId(studentId, pageNumber, pageSize);
+
+			return Result<Pagination<ExamHistoryDto>>.Success(paginatedExams);
+		}
 	}
 }
