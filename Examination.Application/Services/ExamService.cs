@@ -24,13 +24,13 @@ namespace Examination.Application.Services
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IPublishEndpoint _publishEndpoint;
-		private readonly INotificationService _notificationService;
+		private readonly INotificationManger _notificationManger;
 
-		public ExamService(IUnitOfWork unitOfWork, IPublishEndpoint publishEndpoint, INotificationService notificationService)
+		public ExamService(IUnitOfWork unitOfWork, IPublishEndpoint publishEndpoint, INotificationManger notificationManger)
 		{
 			_unitOfWork = unitOfWork;
 			_publishEndpoint = publishEndpoint;
-			_notificationService = notificationService;
+			_notificationManger = notificationManger;
 		}
 
 		public async Task<Result<ExamDto>> CreateOrCountinueExamAsync(int subjectId, string studentId)
@@ -53,6 +53,7 @@ namespace Examination.Application.Services
 					await _unitOfWork.CompleteAsync();
 
 					return Result<ExamDto>.Failure("Your previous exam has expired. You can now start a new exam.");
+
 				}
 
 				int remainingTime = (int)(existingExam.StartedAt.AddMinutes(existingExam.Duration) - DateTime.UtcNow).TotalSeconds;
@@ -179,10 +180,11 @@ namespace Examination.Application.Services
 
 			await _unitOfWork.CompleteAsync();
 
-			await _notificationService.NotifyAdminAsync($"Student With id: {studentId} has submitted his {exam.Subject.Name} Exam");
+			await _notificationManger.NotifyAdminsAsync($"Student With id: {studentId} has submitted his {exam.Subject.Name} Exam");
 
 			return Result<bool>.Success(true);
 		}
+
 		public async Task<Result<Pagination<ExamHistoryDto>>> GetExamHistoryAsync(int pageNumber, int PageSize)
 		{
 			var paginatedExams = await _unitOfWork.ExamsRepository.GetExamHistory(pageNumber, PageSize);
@@ -199,6 +201,48 @@ namespace Examination.Application.Services
 			}
 
 			return Result<ExamDto>.Success(exam);
+		}
+
+		public async Task<Result<List<ExamResultDto>>> GetExamQuestionResultAsync(int examId, string studentId)
+		{
+			if (string.IsNullOrWhiteSpace(studentId))
+			{
+				return Result<List<ExamResultDto>>.Failure("Invalid student ID.");
+			}
+			var exam = await _unitOfWork.ExamsRepository.GetExamResult(examId, studentId);
+
+			if (exam == null)
+				return Result<List<ExamResultDto>>.NotFound("Exam not found.");
+
+			if (exam.Submission == null)
+				return Result<List<ExamResultDto>>.NotFound("Student has not submitted the exam.");
+
+			var submissionAnswers = exam.Submission.SubmissionAnswers;
+
+			var result = exam.ExamQuestions.Select(eq =>
+			{
+				var question = eq.Question;
+				var studentAnswer = submissionAnswers.FirstOrDefault(sa => sa.QuestionId == question.Id);
+				var correctOption = question.Options.FirstOrDefault(o => o.IsCorrect);
+
+				return new ExamResultDto
+				{
+					QuestionText = question.Text,
+					Options = question.Options.Select(o => new ExamResultOptionDto
+					{
+						Id = o.Id,
+						Text = o.Text,
+						IsCorrect = o.IsCorrect
+					}).ToList(),
+
+					SelectedOptionId = studentAnswer?.SelectedOptionId,
+
+					IsAnswerCorrect = studentAnswer?.SelectedOptionId == correctOption?.Id
+				};
+
+			}).ToList();
+
+			return Result<List<ExamResultDto>>.Success(result);
 		}
 	}
 }

@@ -17,5 +17,7 @@ namespace Examination.Application.Interfaces.Repositories
 		Task<Exam?> GetInProgressExam(string studentId, int subjectId);
 		Task<ExamDto> GetExamByIdAsync(int id);
 		Task<Exam?> GetExamWithQuestionsAndAnswers(int id);
+		Task<Exam?> GetExamResult(int examId, string studentId);
+
 	}
 }

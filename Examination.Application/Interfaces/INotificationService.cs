@@ -10,6 +10,5 @@ namespace Examination.Application.Interfaces
 	{
 		Task NotifyStudentAsync(string studentId, string message);
 		Task NotifyAdminAsync(string message);
-
 	}
 }

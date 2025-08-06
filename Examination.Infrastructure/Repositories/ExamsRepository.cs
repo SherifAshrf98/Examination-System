@@ -27,6 +27,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<ExamDto> GetExamByIdAsync(int id)
 		{
 			return await _dbContext.Exams
+				.AsNoTracking()
 				.Where(e => e.Id == id)
 				.Select(e => new ExamDto
 				{
@@ -61,15 +62,18 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<Pagination<ExamHistoryDto>> GetExamHistory(int pageNumber, int pageSize)
 		{
 			var PaginatedList = await _dbContext.Exams
+				.AsNoTracking()
 				.OrderByDescending(e => e.StartedAt)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize).Select(e => new ExamHistoryDto
 				{
+					ExamId = e.Id,
+					Status = e.status,
 					Duration = e.Duration,
 					StartedAt = e.StartedAt,
 					StudentName = $"{e.Student.FirstName}{e.Student.LastName}",
 					SubjectName = e.Subject.Name,
-					Score = e.Submission.Score ?? 60
+					Score = e.Submission.Score
 				}).ToListAsync();
 
 			var totalCount = await _dbContext.Exams.CountAsync();
@@ -87,19 +91,21 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<Pagination<ExamHistoryDto>> GetExamHistoryByStudentId(string studentId, int pageNumber, int pageSize)
 		{
 			var PaginatedList = await _dbContext.Exams
-				.Where(e => e.StudentId == studentId)
-				.OrderBy(e => e.Subject.Name)
+				.AsNoTracking()
+				.Where(e => e.StudentId == studentId && e.status == ExamStatus.Submitted)
+				.OrderByDescending(e => e.StartedAt)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize).Select(e => new ExamHistoryDto
 				{
+					ExamId = e.Id,
 					Duration = e.Duration,
 					StartedAt = e.StartedAt,
 					StudentName = $"{e.Student.FirstName}{e.Student.LastName}",
 					SubjectName = e.Subject.Name,
-					Score = e.Submission.Score ?? 60
+					Score = e.Submission.Score
 				}).ToListAsync();
 
-			var totalCount = await _dbContext.Exams.CountAsync(e => e.StudentId == studentId);
+			var totalCount = await _dbContext.Exams.CountAsync(e => e.StudentId == studentId && e.status == ExamStatus.Submitted);
 
 			return new Pagination<ExamHistoryDto>
 			{
@@ -113,12 +119,24 @@ namespace Examination.Infrastructure.Repositories
 
 		public async Task<Exam?> GetExamWithQuestionsAndAnswers(int id)
 		{
-			return await _dbContext.Exams
+			return await _dbContext.Exams.AsSplitQuery()
 				.Include(e => e.Subject)
 				.Include(e => e.ExamQuestions)
 					.ThenInclude(eq => eq.Question)
 						.ThenInclude(q => q.Options)
 						.FirstOrDefaultAsync(e => e.Id == id);
+		}
+
+		public async Task<Exam?> GetExamResult(int examId, string studentId)
+		{
+			return await _dbContext.Exams
+						 .Include(e => e.ExamQuestions)
+							.ThenInclude(eq => eq.Question)
+							.ThenInclude(q => q.Options)
+						 .Include(e => e.Submission)
+							.ThenInclude(s => s.SubmissionAnswers)
+							.AsSplitQuery()
+						 .FirstOrDefaultAsync(e => e.Id == examId && e.StudentId == studentId);
 		}
 	}
 }

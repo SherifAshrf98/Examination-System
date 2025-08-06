@@ -9,8 +9,7 @@ using Examination.Domain.Entities.Identity;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+
 
 namespace Examination.Infrastructure.Services
 {

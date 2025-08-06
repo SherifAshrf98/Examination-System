@@ -9,17 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Examination.Infrastructure.Messaging.Consumers
+namespace Examination.Application.Messaging.Consumers
 {
 	public class ExamEvaluatedConsumer : IConsumer<ExamEvaluatedEvent>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly INotificationService _notificationService;
+		private readonly INotificationManger _notificationManger;
 
-		public ExamEvaluatedConsumer(IUnitOfWork unitOfWork, INotificationService notificationService)
+		public ExamEvaluatedConsumer(IUnitOfWork unitOfWork, INotificationManger notificationManger)
 		{
 			_unitOfWork = unitOfWork;
-			_notificationService = notificationService;
+			_notificationManger = notificationManger;
 		}
 		public async Task Consume(ConsumeContext<ExamEvaluatedEvent> context)
 		{
@@ -31,13 +31,14 @@ namespace Examination.Infrastructure.Messaging.Consumers
 			{
 				return;
 			}
+
 			submission.Score = data.Score;
 
 			await _unitOfWork.CompleteAsync();
 
-			await _notificationService.NotifyStudentAsync(data.StudentId, $"Your exam has been graded! You scored {submission.Score}/10!");
+			await _notificationManger.NotifyStudentAsync(data.StudentId, $"Your {submission.Exam.Subject.Name} exam has been graded! You scored {submission.Score}/100!");
 
-			await _notificationService.NotifyAdminAsync($"Student {data.StudentId} scored {data.Score}");
+			await _notificationManger.NotifyAdminsAsync($"Student with Id : {data.StudentId} scored {data.Score} at the {submission.Exam.Subject.Name} exam ");
 		}
 	}
 }

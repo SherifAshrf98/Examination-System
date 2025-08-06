@@ -1,5 +1,5 @@
 ﻿using Examination.Application.Common;
-using Examination.Application.Dtos;
+using Examination.Application.Dtos.Dashboards;
 using Examination.Application.Interfaces;
 using Examination.Application.Interfaces.Repositories;
 using System;
@@ -18,6 +18,9 @@ namespace Examination.Application.Services
 		{
 			_unitOfWork = unitOfWork;
 		}
+
+	
+
 		//public async Task<Result<int>> GetTotalFailedExamsAsync()
 		//{
 		//	var TotalFailedExams = await _unitOfWork.DashboardRepository.GetTotalFailedExams();
@@ -46,11 +49,11 @@ namespace Examination.Application.Services
 		//	return Result<int>.Success(totalSubmittedExams);
 		//}
 
-		public async Task<Result<DashboardStatsDto>> GetDashboardStatsAsync()
+		public async Task<Result<AdminDashboardStatsDto>> GetAdminDashboardStatsAsync()
 		{
 			try
 			{
-				var stats = new DashboardStatsDto
+				var stats = new AdminDashboardStatsDto
 				{
 					TotalStudents = await _unitOfWork.DashboardRepository.GetTotalStudentsCount(),
 					TotalPassedExams = await _unitOfWork.DashboardRepository.GetTotalPassedExams(),
@@ -58,11 +61,31 @@ namespace Examination.Application.Services
 					TotalSubmittedExams = await _unitOfWork.DashboardRepository.GetTotalSubmittedExams()
 				};
 
-				return Result<DashboardStatsDto>.Success(stats);
+				return Result<AdminDashboardStatsDto>.Success(stats);
 			}
 			catch (Exception ex)
 			{
-				return Result<DashboardStatsDto>.Failure("Failed to retrieve dashboard statistics: " + ex.Message);
+				return Result<AdminDashboardStatsDto>.Failure("Failed to retrieve dashboard statistics: " + ex.Message);
+			}
+		}
+
+		public async Task<Result<StudentDashboardStatsDto>> GetStudentDashboardStatsAsync(string studentId)
+		{
+			try
+			{
+				var stats = new StudentDashboardStatsDto
+				{
+					TotalExams = await _unitOfWork.DashboardRepository.GetStudentTotalExams(studentId),
+					CompletedExams = await _unitOfWork.DashboardRepository.GetStudentSubmittedExams(studentId),
+					AverageScore = await _unitOfWork.DashboardRepository.GetStudentAverageScore(studentId),
+					TotalSubjects = await _unitOfWork.DashboardRepository.GetStudentTotalSubjects(studentId)
+				};
+
+				return Result<StudentDashboardStatsDto>.Success(stats);
+			}
+			catch (Exception ex)
+			{
+				return Result<StudentDashboardStatsDto>.Failure("Failed to retrieve dashboard statistics: " + ex.Message);
 			}
 		}
 	}

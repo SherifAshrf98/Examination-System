@@ -29,7 +29,7 @@ namespace EvaluationService.Consumer
 
 				if (correctAnswer != null && correctAnswer.CorrectOptionId == answer.SelectedOptionId)
 				{
-					score++;
+					score += 10;
 				}
 			}
 

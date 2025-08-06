@@ -5,12 +5,12 @@ using Examination.Api.SignalR.Services;
 using Examination.Application.Common;
 using Examination.Application.Interfaces;
 using Examination.Application.Interfaces.Repositories;
+using Examination.Application.Messaging.Consumers;
 using Examination.Application.Services;
 using Examination.Application.Validators;
 using Examination.Domain.Entities.Identity;
 using Examination.Infrastructure.Data;
 using Examination.Infrastructure.Data.Seeding;
-using Examination.Infrastructure.Messaging.Consumers;
 using Examination.Infrastructure.Repositories;
 using Examination.Infrastructure.Services;
 using FluentValidation;
@@ -22,8 +22,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -43,7 +45,8 @@ namespace Examination.Api
 					{
 						policy.WithOrigins("http://localhost:4200")
 							  .AllowAnyHeader()
-							  .AllowAnyMethod();
+							  .AllowAnyMethod()
+							  .AllowCredentials();
 					});
 			});
 
@@ -52,7 +55,14 @@ namespace Examination.Api
 				options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 			});
 
-			builder.Services.AddSignalR();
+			#region MongoDbServices
+			builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
+			builder.Services.AddSingleton<IMongoClient>(sp =>
+			{
+				var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+				return new MongoClient(settings.ConnectionString);
+			}); 
+			#endregion
 
 			#region SwaggerServices 
 
@@ -172,6 +182,9 @@ namespace Examination.Api
 
 			builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 			builder.Services.AddSingleton<INotificationService, NotificationService>();
+			builder.Services.AddSingleton<INotificationRepository, NotificationRepository>();
+			builder.Services.AddSingleton<INotificationManger, NotificationManger>();
+			builder.Services.AddSingleton<MongoDbContext>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<IExamRepository, ExamsRepository>();
 			builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
@@ -212,9 +225,9 @@ namespace Examination.Api
 				});
 			});
 
-			var app = builder.Build();
+			builder.Services.AddSignalR();
 
-			app.MapHub<NotificationHub>("/hubs/notifications");
+			var app = builder.Build();
 
 			#region IdentitySeeding
 
@@ -248,6 +261,7 @@ namespace Examination.Api
 					c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
 				});
 			}
+
 			app.UseHttpsRedirection();
 
 			app.UseCors("AllowFrontend");
@@ -255,6 +269,8 @@ namespace Examination.Api
 			app.UseAuthentication();
 
 			app.UseAuthorization();
+
+			app.MapHub<NotificationHub>("/hubs/notifications");
 
 			app.MapControllers();
 

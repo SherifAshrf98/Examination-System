@@ -3,11 +3,7 @@ using Examination.Application.Dtos.AppUser;
 using Examination.Application.Dtos.Subject;
 using Examination.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Examination.Infrastructure.Repositories
 {
@@ -26,6 +22,8 @@ namespace Examination.Infrastructure.Repositories
 									   join role in _dbContext.Roles on userRole.RoleId equals role.Id
 									   where role.Name == "Student"
 									   select user)
+							     .OrderByDescending(user => user.Id)
+								 .AsNoTracking()
 								 .Skip((pageNumber - 1) * pageSize)
 								 .Take(pageSize)
 								 .Select(user => new StudentDto
@@ -40,6 +38,7 @@ namespace Examination.Infrastructure.Repositories
 			var totalCount = await _dbContext.UserRoles
 							.Where(ur => ur.RoleId == "00db0e79-2fc4-4882-8cde-e7b07af481fc")
 							.CountAsync();
+
 			return new Pagination<StudentDto>
 			{
 				Items = paginatedList,
@@ -52,6 +51,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<int> GetStudentsCountAsync(string roleId)
 		{
 			var studentsCount = await _dbContext.UserRoles
+							.AsNoTracking()
 							.Where(ur => ur.RoleId == roleId)
 							.CountAsync();
 			return studentsCount;
@@ -59,6 +59,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<StudentWithSubjectsDto> GetStudentWithSubjects(string id)
 		{
 			return await _dbContext.Users.Where(u => u.Id == id)
+				.AsNoTracking()
 				.Include(u => u.StudentSubjects)
 				.ThenInclude(ss => ss.Subject)
 				.Select(s => new StudentWithSubjectsDto

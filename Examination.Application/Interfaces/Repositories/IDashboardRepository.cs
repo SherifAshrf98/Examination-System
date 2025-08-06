@@ -12,5 +12,9 @@ namespace Examination.Application.Interfaces.Repositories
 		Task<int> GetTotalSubmittedExams();
 		Task<int> GetTotalPassedExams();
 		Task<int> GetTotalFailedExams();
+		Task<int> GetStudentTotalExams(string studentId);
+		Task<int> GetStudentSubmittedExams(string studentId);
+		Task<int> GetStudentAverageScore(string studentId);
+		Task<int> GetStudentTotalSubjects(string studentId);
 	}
 }

@@ -25,6 +25,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<QuestionDto> GetQuestionWithOptions(int id)
 		{
 			return await _context.Questions
+				.AsNoTracking()
 				.Where(q => q.Id == id)
 				.Select(o => new QuestionDto
 				{

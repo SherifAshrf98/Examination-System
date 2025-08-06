@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Examination.Api.SignalR.Hubs
 {
+	[Authorize]
 	public class NotificationHub : Hub
 	{
 		public override async Task OnConnectedAsync()
@@ -14,16 +16,6 @@ namespace Examination.Api.SignalR.Hubs
 			}
 
 			await base.OnConnectedAsync();
-		}
-		public async Task SendTestMessage()
-		{
-			await Clients.Caller.SendAsync("ReceiveNotification", new
-			{
-				id = Guid.NewGuid().ToString(),
-				message = "Connection successful!",
-				timestamp = DateTime.UtcNow,
-				type = "success"
-			});
 		}
 	}
 }

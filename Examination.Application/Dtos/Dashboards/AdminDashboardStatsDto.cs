@@ -1,6 +1,6 @@
-﻿namespace Examination.Application.Dtos
+﻿namespace Examination.Application.Dtos.Dashboards
 {
-	public class DashboardStatsDto
+	public class AdminDashboardStatsDto
 	{
 		public int TotalStudents { get; set; }
 		public int TotalPassedExams { get; set; }

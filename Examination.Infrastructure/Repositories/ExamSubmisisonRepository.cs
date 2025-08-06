@@ -20,7 +20,9 @@ namespace Examination.Infrastructure.Repositories
 		}
 		public async Task<ExamSubmission> GetByExamIdAndStudentId(int examId, string studentId)
 		{
-			return await _dbContext.Submissions.FirstOrDefaultAsync(s => s.ExamId == examId && s.StudentId == studentId);
+			return await _dbContext.Submissions.Include(s => s.Exam)
+				.ThenInclude(e => e.Subject)
+				.FirstOrDefaultAsync(s => s.ExamId == examId && s.StudentId == studentId);
 		}
 	}
 }

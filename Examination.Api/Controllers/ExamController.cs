@@ -94,5 +94,28 @@ namespace Examination.Api.Controllers
 
 			return Ok(new ApiResponse<Pagination<ExamHistoryDto>>(200, result.Value));
 		}
+
+		[HttpGet("result/{examId}")]
+		public async Task<IActionResult> GetExamQuestionResult(int examId)
+		{
+			var studentId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			if (string.IsNullOrWhiteSpace(studentId))
+			{
+				return BadRequest(new ApiValidationErrorResponse() { Errors = new List<string> { "Invalid student ID." } });
+			}
+
+			var result = await _examService.GetExamQuestionResultAsync(examId, studentId);
+
+			if (!result.IsSuccess)
+			{
+				if (result.IsNotFound)
+					return NotFound(new ApiResponse(404, result.Errors.FirstOrDefault()));
+
+				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
+			}
+
+			return Ok(new ApiResponse<List<ExamResultDto>>(200, result.Value));
+		}
 	}
 }

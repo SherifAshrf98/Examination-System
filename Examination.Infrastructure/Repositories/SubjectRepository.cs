@@ -17,6 +17,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<IReadOnlyList<SubjectDto>> GetAllSubjectsAsync()
 		{
 			return await _dbcontext.Subjects
+				.AsNoTracking()
 				.OrderBy(s => s.Name)
 				.Select(s => new SubjectDto
 				{
@@ -28,7 +29,7 @@ namespace Examination.Infrastructure.Repositories
 		public async Task<Pagination<SubjectDto>> GetAllSubjectsPaginatedAsync(int pageNumber, int pageSize)
 		{
 
-			var Items = await _dbcontext.Subjects
+			var Items = await _dbcontext.Subjects.AsNoTracking()
 				.OrderBy(s => s.Name)
 				.Skip((pageNumber - 1) * pageSize)
 				.Take(pageSize)

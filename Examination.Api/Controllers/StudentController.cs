@@ -41,7 +41,6 @@ namespace Examination.Api.Controllers
 
 				return BadRequest(new ApiValidationErrorResponse() { Errors = result.Errors });
 			}
-
 			return Ok(new ApiResponse(200, "Student enrolled successfully"));
 		}
 
@@ -91,6 +90,7 @@ namespace Examination.Api.Controllers
 			}
 			return Ok(new ApiResponse<StudentWithSubjectsDto>(200, result.Value));
 		}
+
 		[HttpGet("Exams")]
 		public async Task<IActionResult> GetStudentExams(int pageNumber, int pageSize)
 		{

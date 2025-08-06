@@ -16,5 +16,6 @@ namespace Examination.Application.Interfaces
 		Task<Result<bool>> SubmitExam(string studentId, SubmitExamDto submitExamDto);
 		Task<Result<Pagination<ExamHistoryDto>>> GetExamHistoryAsync(int pageNumber, int pageSize);
 		Task<Result<ExamDto>> GetExamById(int id);
+		Task<Result<List<ExamResultDto>>> GetExamQuestionResultAsync(int examId, string studentId);
 	}
 }
